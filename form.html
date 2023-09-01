@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>Form/signup</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <div class="container">
+        <form id="signUp" class="form">
+            <h1>Sign Up</h1>
+            <div class="form-content">
+                <i class=" fas fa-user"></i>
+                <input type="text" name="firstName" id="firstName" autocomplete="off" placeholder="First Name">
+                <span></span>
+            </div>
+
+            <div class="form-content">
+                <i class=" fas fa-user"></i>
+                <input type="text" name="lastName" id="lastName" autocomplete="off" placeholder="Last Name">
+                <span></span>
+            </div>
+            
+            <div class="form-content">
+                <i class=" fas fa-user"></i>
+                <input type="text" name="username" id="username" autocomplete="off" placeholder="username">
+                <span></span>
+            </div>
+
+            <div class="form-content">
+                <i class=" fas fa-envelope"></i>
+                <input type="email" name="email" id="email" autocomplete="off" placeholder="Email">
+                <span></span>
+            </div>
+            <div class="form-content">
+                <i class=" fas fa-key"></i>
+                <input type="password" name="password" id="password" autocomplete="off" placeholder="Password">
+                <span></span>
+            </div>
+
+            <div class="form-content">
+                <i class="fas fa-key"></i>
+                <input type="password" name="confirmPassword" id="confirmPassword" autocomplete="off" placeholder="Re-type Password">
+                <span></span>
+            </div>
+
+            <div class="form-content">
+                <i class="fas fa-cake"></i>
+                <input type="date" name="dateOfBirth" id="dateOfBirth" autocomplete="off" >
+                <span></span>
+            </div>
+            
+            <div class="form-content">
+                
+                <select id="gender" name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="mllionaire">Millionaire</option>
+                    <option value="billionaire">Billionaire</option>
+                    <option value="dumbass">Dumbass</option>
+                </select>
+            </div>
+
+            <div >
+                <input type="checkbox" name="checkbox" id="checkbox" >
+                I agree with the <a href="T&c.html"> terms and conditions </a>
+                <span id="rederror"></span>
+            </div>
+
+            <div>
+                <button type="submit" >sign up</button>
+            </div>
+
+            <input type="hidden" id="successFlag" name="successFlag" value="false">
+        </form>
+    </div>
+    <script src="form.js"></script>
+</body>
+</html>
