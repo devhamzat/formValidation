@@ -10,7 +10,6 @@ const TandcInput = document.querySelector("#checkbox");
 
 const form = document.querySelector('#signUp');
 
-
 function showError  (input, message)  {
     const formField = input.parentElement;
     formField.classList.add('error');
@@ -29,24 +28,37 @@ function isEmailValid (email) {
     const emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return emailregex.test(email);
 };
-function isPasswordSecure(password){
-    const passwordregex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-    return passwordregex.test(password);
-};
+// function isPasswordSecure(password){
+//     const passwordregex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+//     return passwordregex.test(password);
+// };
+function isPasswordIncludeUppercase(password) {
+    const passwordUppercaseregex =  /.*[A-Z].*/;
+    return passwordUppercaseregex.test(password); 
+}
+function isPasswordInludeSpecialCharacter(password) {
+    const passwordSpecialregex =   /.*[!@#$%^&*].*/;
+    return passwordSpecialregex.test(password);  
+}
+function isPasswordIncludeLowercase(password) {
+    const passwordlowercaseregex = /.*[a-z].*/;
+    return passwordlowercaseregex.test(password);    
+}
 function isFirstnameValid(firstName) {
     const firstNameregex =   /^[A-Za-z\s]+$/;
     return firstNameregex.test(firstName);   
 } 
-function islastnameValid(firstName) {
-    const firstNameregex =   /^[A-Za-z\s]+$/;
-    return firstNameregex.test(firstName);   
+function islastnameValid(lastName) {
+    const lastNameregex =   /^[A-Za-z\s]+$/;
+    return lastNameregex.test(lastName);   
 } 
-
 const isRequired = value => value !== '';
 const isBetween = (length, min, max) => min <= length && length <= max;
 
 const requiredMessage = "**This field is required.";
-const characterMessage = "only characters are allowed"
+const characterMessage = "only characters are allowed";
+const passwordUppercaseMessage = "password must contain at least 1 uppercase";
+const passwordSpecialMessage = "password must contain 1 special character in (!@#$%^&*) ";
 
 
 function checkFirstname  ()  {
@@ -71,11 +83,11 @@ function checkLastname() {
     let valid = false;
     const min =2,
     max =50;
-    const lastname = firstnameInput.value.trim();
+    const lastname = lastnameInput.value.trim();
     if (!isRequired(lastname)) {
         showError(lastnameInput,requiredMessage);        
     }else if (!isBetween(lastname.length,min,max)) {
-        showError(firstnameInput,"Last name is either to short or to long")      
+        showError(lastnameInput,"Last name is either to short or to long")      
 }else if (!islastnameValid(lastname)) {
     showError(lastnameInput,characterMessage) 
 }else{
@@ -126,15 +138,23 @@ function checkEmail() {
 
 function checkPassword  ()  {
     let valid = false;
-
-
+    const min = 8,
+    max =20;
     const password = passwordInput.value.trim();
-
     if (!isRequired(password)) {
         showError(passwordInput, requiredMessage);
-    } else if (!isPasswordSecure(password)) {
-        showError(passwordInput, 'Password must has at least 8 characters that include at least 1 lowercase character, 1 uppercase characters, 1 number, and 1 special character in (!@#$%^&*)');
-    } else {
+    } 
+    else if (!isPasswordIncludeUppercase(password)) {
+        showError(passwordInput,passwordUppercaseMessage );
+    } else if (!isPasswordInludeSpecialCharacter(password)) {
+        showError(passwordInput,passwordSpecialMessage);        
+    }else if (!isPasswordIncludeLowercase(password)) {
+        showError(passwordInput,"error");        
+    }
+    else if(!isBetween(password.length,min,max)){
+        showError(passwordInput,"password must be atleast 8 characters");
+    }
+    else {
         showSuccess(passwordInput);
         valid = true;
     }
@@ -158,6 +178,25 @@ function checkConfirmPassword(){
 
     return valid;
 };
+
+function checkDateOfBirth() {
+    let valid = false;
+    const dateOfBirth = dateofbirthInput.value;
+    const minimumAge = 16; 
+    const dob = new Date(dateOfBirth);
+    const currentDate = new Date();
+    const age = currentDate.getFullYear() - dob.getFullYear();
+    if (!isRequired(dateOfBirth)) {
+        showError(dateofbirthInput, requiredMessage);
+    } else if (age < minimumAge) {
+            showError(dateofbirthInput, `sorry yougin, you must be atleast ${minimumAge} years old.`);
+     } else {
+            showSuccess(dateofbirthInput);
+            valid = true;
+        }
+        return valid;
+    }
+   
 function isTandCChecked(){
     let valid= false;
     if (!checkbox.checked){
@@ -180,6 +219,7 @@ form.addEventListener('submit', function (e) {
         isPasswordValid = checkPassword(),
         isConfirmPasswordValid = checkConfirmPassword(),
         isFirstnameValid = checkFirstname(),
+        isDateOfBirthValid = checkDateOfBirth(),
         isTandCCheckedValid = isTandCChecked();
 
     let isFormValid = isUsernameValid &&
@@ -187,11 +227,52 @@ form.addEventListener('submit', function (e) {
         isPasswordValid &&
         isConfirmPasswordValid&&
         isFirstnameValid &&
-        isTandCCheckedValid &
+        isDateOfBirthValid &&
+        isTandCCheckedValid &&
         isLastNameValid;
 
    
     if (isFormValid) {
-        window.location.href ='/succesSignup.html';
+        window.location.href ='./succesSignup.html';
     }
 });
+
+function ChangeOutline(input, isValid) {
+    const formField = input.parentElement;
+    if (isValid) {
+        formField.classList.remove('error');
+        formField.classList.add('success');
+    } else {
+        formField.classList.remove('success');
+        formField.classList.add('error');
+    }
+}
+
+form.addEventListener('input', function (e) {
+    switch (e.target.id) {
+        case 'firstName':
+            ChangeOutline(firstnameInput, checkFirstname());
+            break;
+        case 'lastName':
+            ChangeOutline(lastnameInput, checkLastname());
+            break;
+        case 'username':
+            ChangeOutline(usernameInput, checkUsername());
+            break;
+        case 'email':
+            ChangeOutline(emailInput, checkEmail());
+            break;
+        case 'password':
+            ChangeOutline(passwordInput, checkPassword());
+            break;
+        case 'confirmPassword':
+            ChangeOutline(confirmPasswordInput, checkConfirmPassword());
+            break;
+        case 'dateOfBirth':
+            ChangeOutline(dateofbirthInput,checkDateOfBirth());
+            break;
+
+    }
+});
+
+
